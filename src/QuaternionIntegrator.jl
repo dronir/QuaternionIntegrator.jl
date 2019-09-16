@@ -3,13 +3,13 @@ module QuaternionIntegrator
 using Quaternions
 using LinearAlgebra
 
-export step, integrate
+export rotate, integrate
 
 rotate(q, v) = Quaternions.imag(q * Quaternion(0.0, v) * inv(q))
 
 dummy_torque(q) = [0.0, 0.0, 0.0]
 
-function step(q0::Quaternion, w0::Vector, Ib::AbstractArray, dt::Real, torque::Function)
+function integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Function)
     
     # Get world-frame torque from world-frame orientation
     T0 = torque(q0)
@@ -54,7 +54,7 @@ function step(q0::Quaternion, w0::Vector, Ib::AbstractArray, dt::Real, torque::F
 end
 
 
-function integrate(q0, w0, Ib, dt, torque, Nsteps)
+function integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Function, Nsteps::Integer)
     Q = typeof(q0)[q0]
     W = typeof(w0)[w0]
     for i = 1:Nsteps
