@@ -1,9 +1,9 @@
 name = "QuaternionIntegrator"
-author = "Olli Wilkman <olli.wilkman@iki.fi>"
-version = "0.1"
 uuid = "dc284178-beb3-4143-96bf-abb625ba06b3"
+author = "Olli Wilkman <olli.wilkman@iki.fi>"
+version = "0.1.0"
 
 [deps]
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Quaternions = "94ee1d12-ae83-5a48-8b1c-48b8ff168ae0"
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
