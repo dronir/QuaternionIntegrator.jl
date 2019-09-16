@@ -21,7 +21,7 @@ The package exports two functions: `rotate` and `integrate`. The latter has two 
 This function applies the rotation quaternion `q` to the vector `v` and returns the
 resulting rotated vector.
 
-### `integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Function)`
+### integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Function)
 
 This function takes in a quaternion `q0`, an angular velocity vector `w0`, an inertial
 tensor `Ib`, the length of the time step `dt` and a function `torque` which returns a
@@ -35,7 +35,7 @@ torque vector in world coordinates.
 
 The function returns `(q1, w1)`, the orientation and angular velocity after the time step.
 
-### `integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Function, Nsteps::Integer)`
+### integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Function, Nsteps::Integer)
 
 As above, but computes `Nsteps` ahead in time, and returns arrays of orientation
 quaternions and velocity vectors.
