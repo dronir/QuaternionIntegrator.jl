@@ -5,24 +5,24 @@ using LinearAlgebra
 
 export rotate, integrate
 
-rotate(q, v) = Quaternions.imag(q * Quaternion(0.0, v) * inv(q))
+@inline rotate(q::Quaternion, v) = Quaternions.imag(q * Quaternion(0.0, v) * inv(q))
 
 dummy_torque(q) = [0.0, 0.0, 0.0]
 
 function integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Function)
     
-    # Get world-frame torque from world-frame orientation
-    T0 = torque(q0)
-    
     # Transform velocity and torque into body frame
     wb0 = rotate(inv(q0), w0)
-    Tb0 = rotate(inv(q0), T0)
+    Tb0 = rotate(inv(q0), torque(q0))
     
     # Compute body-frame startpoint acceleration from torque
     wdb0 = inv(Ib) * (Tb0 - cross(wb0, (Ib * wb0)))
     
     # Compute quarter-point body-frame velocity from startpoint velocity and acceleration
     wb4 = wb0 + 0.25 * wdb0 * dt
+    
+    # Compute midpoint body-frame velocity from startpoint velocity and acceleration
+    wb2 = wb0 + 0.50 * wdb0 * dt
     
     # Rotate quarter-point velocity to world frame
     w4 = rotate(q0, wb4)
@@ -31,11 +31,10 @@ function integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Fun
     # Compute (predicted) midpoint orientation from quarter-point velocity and startpoint orientation
     qp2 = Quaternion(cos(0.25 * n4 * dt), sin(0.25 * n4 * dt) * w4 / n4) * q0
     
-    # Compute midpoint body-frame velocity from startpoint velocity and acceleration
-    wb2 = wb0 + 0.50 * wdb0 * dt
+    # Compute torque at predicted midpoint and rotate it to body frame
+    Tb2 = rotate(inv(qp2), torque(qp2))
     
     # Compute body-frame midpoint acceleration from torque based on midpoint orientation
-    Tb2 = torque(qp2)
     wdb2 = inv(Ib) * (Tb2 - cross(wb2, (Ib * wb2)))
 
     # Rotate (predicted) midpoint velocity to world frame
