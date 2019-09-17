@@ -28,3 +28,17 @@ end
     
 end
 
+
+@testset "Multi-step" begin
+
+    # Set up tests
+    ∆t = 0.001
+    I = diagm([1.0, 1.0, 1.0])
+    torque = q -> [0.1, 0.0, 0.0]
+    q0 = Quaternion(1.0, 0.0, 0.0, 0.0)
+    w0 = [0.0, 0.0, 0.0]
+    N = 1000
+    
+    Q, W = integrate(q0, w0, I, ∆t, torque, N)
+
+end

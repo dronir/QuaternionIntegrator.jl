@@ -63,7 +63,7 @@ function integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Fun
     Q = typeof(q0)[q0]
     W = typeof(w0)[w0]
     for i = 1:Nsteps
-        q0, w0 = step(q0, w0, Ib, dt, torque)
+        q0, w0 = integrate(q0, w0, Ib, dt, torque)
         push!(Q, q0)
         push!(W, w0)
     end
