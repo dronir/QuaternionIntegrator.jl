@@ -19,7 +19,8 @@ The package exports two functions: `rotate` and `integrate`. The latter has two 
 ### rotate(q, v)
 
 This function applies the rotation quaternion `q` to the vector `v` and returns the
-resulting rotated vector.
+resulting rotated vector. If `q` describes an object's orientation in the world coordinate
+frame, the function maps a vector from body-fixed coordinates to world coordinates.
 
 ### integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Function)
 
