@@ -2,10 +2,16 @@ module QuaternionIntegrator
 
 using Quaternions
 using LinearAlgebra
+using Unitful
 
 export rotate, integrate
 
-@inline rotate(q::Quaternion, v) = Quaternions.imag(q * Quaternion(0.0, v) * inv(q))
+import Unitful.unit
+
+unit(A::Array) = unit(eltype(A))
+
+@inline vec_quaternion(v::Array) =  Quaternion(0.0, ustrip.(unit(v), v)) * unit(v)
+@inline rotate(q::Quaternion, v) = Quaternions.imag(q * vec_quaternion(v) * inv(q))
 
 dummy_torque(q) = [0.0, 0.0, 0.0]
 
