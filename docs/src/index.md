@@ -1,8 +1,9 @@
 
-# QuaternionIntegrator
+# QuaternionIntegrator.jl
 
-Compute the time evolution of an object's rotational state, given its inertial tensor and
-an external torque function.
+[QuaternionIntergrator.jl](https://github.com/dronir/QuaternionIntegrator.jl) is a
+[Julia](https://julialang.org) package that lets you compute the time evolution of an
+object's rotational state, given its inertial tensor and an external torque function.
 
 Based on the algorithm given by F. Zhao and B. G. M. van Wachem (2013) _A novel Quaternion
 integration approach for describing the behaviour of non-spherical particles_, Acta Mech
