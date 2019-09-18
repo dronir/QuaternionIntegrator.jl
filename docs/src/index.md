@@ -15,3 +15,33 @@ the quaternion is
 ```math
 q = \left(\cos \frac{\theta}{2}, \sin \frac{\theta}{2} \mathbf v \right).
 ```
+
+This quaternion represents a rotation from body-fixed coordinates to world coordinates.
+
+## Quick start
+
+```
+using Quaternions
+using QuaternionIntegrator
+
+# Constant torque around y axis
+torque(q) = [0.0, 1.0, 0.0]
+
+# Simplest diagonal inertial tensor
+I = diagm([1.0, 1.0, 1.0])
+
+# Starting orientation (no rotation)
+q0 = Quaternion(1.0, 0.0, 0.0, 0.0)
+
+# Starting angular velocity (not rotating)
+ω0 = [0.0, 0.0, 0.0]
+
+# Integration time step
+∆t = 0.01
+
+# Get orientation and angular velocity after one timestep
+q1, ω1 = integrate(q0, ω0, I, ∆t, torque)
+
+# Compute 1000 time steps ahead and get arrays of orientations and velocities
+Q, Ω = integrate(q0, ω0, I, ∆t, torque, 1000)
+```
