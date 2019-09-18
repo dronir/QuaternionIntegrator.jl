@@ -6,5 +6,9 @@ rotate
 ```
 
 ```@docs
+orientation
+```
+
+```@docs
 integrate
 ```

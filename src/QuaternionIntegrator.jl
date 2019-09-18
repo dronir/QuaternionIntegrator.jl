@@ -4,7 +4,7 @@ using Quaternions
 using LinearAlgebra
 using Unitful
 
-export rotate, integrate
+export rotate, orientation, integrate
 
 import Unitful.unit
 
@@ -26,6 +26,18 @@ coordinates. For the opposite rotation, call `rotate(inv(q), v)`.
 rotate(q::Quaternion, v::Vector) = Quaternions.imag(q * vec_quaternion(v) * inv(q))
 
 
+
+"""
+    orientation(v::Vector, angle::Real)
+
+Return an orientation quaternion with the given axis `v` and rotation angle.
+
+The vector `v` is assumed to be normalized to unit length.
+
+"""
+function orientation(v::Vector, angle::Real)
+    return Quaternion(cos(0.5 * angle), sin(0.5 * angle) .* v)
+end
 
 
 """
