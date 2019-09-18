@@ -37,8 +37,12 @@ end
     torque = q -> [0.1, 0.0, 0.0]
     q0 = Quaternion(1.0, 0.0, 0.0, 0.0)
     w0 = [0.0, 0.0, 0.0]
-    N = 1000
+    N = 1
     
+    q1, w1 = integrate(q0, w0, I, ∆t, torque)
     Q, W = integrate(q0, w0, I, ∆t, torque, N)
+
+    @test Q[2] ≈ q1
+    @test W[2] ≈ w1
 
 end
