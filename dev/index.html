@@ -26,17 +26,7 @@ I = diagm([1.0, 1.0, 1.0]) * u&quot;kg * m^2&quot;
 torque(q) = [0.0, 1000.0, 0.0] * u&quot;N * mm&quot;
 q0 = Quaternion(1.0, 0.0, 0.0, 0.0)
 ω0 = [0.0, 0.0, 0.0] * u&quot;1/s&quot;
-q1, ω1 = integrate(q0, ω0, I, ∆t, torque, 1000)</code></pre><p>This will have a small effect on performance: </p><pre><code class="language-">using BenchmarkTools
-using Quaternions, QuaternionIntegrator, Unitful, LinearAlgebra # hide
-∆t = 10000.0 * u&quot;µs&quot; # hide
-I = diagm([1.0, 1.0, 1.0]) * u&quot;kg * m^2&quot; # hide
-torque(q) = [0.0, 1000.0, 0.0] * u&quot;N * mm&quot; # hide
-q0 = Quaternion(1.0, 0.0, 0.0, 0.0) # hide
-ω0 = [0.0, 0.0, 0.0] * u&quot;1/s&quot; # hide
-q1, ω1 = integrate(q0, ω0, I, ∆t, torque, 1000) # hide
-# With units
-@benchmark integrate(q0, ω0, I, ∆t, torque, 1000)
-</code></pre><pre><code class="language-">using BenchmarkTools # hide
+q1, ω1 = integrate(q0, ω0, I, ∆t, torque, 1000)</code></pre><p>This will have a small effect on performance. Without units:</p><pre><code class="language-">using BenchmarkTools
 using Quaternions, QuaternionIntegrator, LinearAlgebra # hide
 ∆t = 0.01 # hide
 I = diagm([1.0, 1.0, 1.0]) # hide
@@ -44,6 +34,15 @@ torque(q) = [0.0, 1.0, 0.0] # hide
 q0 = Quaternion(1.0, 0.0, 0.0, 0.0) # hide
 ω0 = [0.0, 0.0, 0.0] # hide
 q1, ω1 = integrate(q0, ω0, I, ∆t, torque, 1000) # hide
-# Without units
+
+@benchmark integrate(q0, ω0, I, ∆t, torque, 1000)</code></pre><p>With units:</p><pre><code class="language-">using BenchmarkTools # hide
+using Quaternions, QuaternionIntegrator, Unitful, LinearAlgebra # hide
+∆t = 10000.0 * u&quot;µs&quot; # hide
+I = diagm([1.0, 1.0, 1.0]) * u&quot;kg * m^2&quot; # hide
+torque(q) = [0.0, 1000.0, 0.0] * u&quot;N * mm&quot; # hide
+q0 = Quaternion(1.0, 0.0, 0.0, 0.0) # hide
+ω0 = [0.0, 0.0, 0.0] * u&quot;1/s&quot; # hide
+q1, ω1 = integrate(q0, ω0, I, ∆t, torque, 1000) # hide
+
 @benchmark integrate(q0, ω0, I, ∆t, torque, 1000)
 </code></pre><footer><hr/><a class="next" href="algorithm/"><span class="direction">Next</span><span class="title">The algorithm</span></a></footer></article></body></html>
