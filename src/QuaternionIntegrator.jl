@@ -8,13 +8,40 @@ export rotate, integrate
 
 import Unitful.unit
 
+
+# Some utility functions to help make this package compatible with Unitful
 unit(A::Array) = unit(eltype(A))
+@inline vec_quaternion(v::Vector) =  Quaternion(0.0, ustrip.(unit(v), v)) * unit(v)
 
-@inline vec_quaternion(v::Array) =  Quaternion(0.0, ustrip.(unit(v), v)) * unit(v)
-@inline rotate(q::Quaternion, v) = Quaternions.imag(q * vec_quaternion(v) * inv(q))
 
-dummy_torque(q) = [0.0, 0.0, 0.0]
+"""
+    rotate(q::Quaternion, v::Vector)
 
+Apply orientation quaternion `q` to rotate vector `v`, return rotated vector.
+
+An object's orientation quaternion rotates vectors from the body-fixed coordinates to world
+coordinates. For the opposite rotation, call `rotate(inv(q), v)`.
+
+"""
+rotate(q::Quaternion, v::Vector) = Quaternions.imag(q * vec_quaternion(v) * inv(q))
+
+
+
+
+"""
+    integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Function)
+
+Integrate a rotational state ahead by one time step.
+
+- `q0`, current orientation quaternion.
+- `w0`, current angular velocity.
+- `Ib`, inertial tensor of the object in body coordinates.
+- `dt`, length of time step.
+- `torque`, a function that returns a torque vector given an orientation. 
+
+Returns `(q1, w1)`, the orientation and angular velocity at the end of the time step.
+
+"""
 function integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Function)
     
     # Transform velocity and torque into body frame
@@ -59,15 +86,19 @@ function integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Fun
 end
 
 
+"""
+    integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Function, N::Integer)
+
+Integrate a rotational state ahead by `N` time steps.
+
+Returns `(q1, w1)`, the orientation and angular velocity after `N` integration steps.
+
+"""
 function integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Function, Nsteps::Integer)
-    Q = typeof(q0)[q0]
-    W = typeof(w0)[w0]
     for i = 1:Nsteps
         q0, w0 = integrate(q0, w0, Ib, dt, torque)
-        push!(Q, q0)
-        push!(W, w0)
     end
-    return Q, W
+    return q0, w0
 end
 
 
