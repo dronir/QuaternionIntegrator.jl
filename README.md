@@ -3,7 +3,6 @@
 
 [![Build Status](https://travis-ci.org/dronir/QuaternionIntegrator.jl.svg?branch=master)](https://travis-ci.org/dronir/QuaternionIntegrator.jl)
 [![codecov](https://codecov.io/gh/dronir/QuaternionIntegrator.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/dronir/QuaternionIntegrator.jl)
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://dronir.github.io/QuaternionIntegrator.jl/stable)
 [![](https://img.shields.io/badge/docs-dev-blue.svg)](https://dronir.github.io/QuaternionIntegrator.jl/dev)
 
 Simple integrator for orientation quaternions. Given an orientation quaternion, initial
