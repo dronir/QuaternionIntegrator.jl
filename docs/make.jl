@@ -10,3 +10,7 @@ makedocs(
         "API" => "interface.md"
     ]
 )
+
+deploydocs(
+    repo = "github.com/dronir/QuaternionIntegrator.jl.git",
+)
