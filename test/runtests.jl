@@ -3,6 +3,7 @@ using Test
 using Quaternions
 using QuaternionIntegrator
 using LinearAlgebra
+using Unitful
 
 @testset "Rotation function" begin
     axis = [0.0, 0.0, 1.0]
@@ -54,4 +55,19 @@ end
     @test qn ≈ q1
     @test wn ≈ w1
 
+end
+
+
+@testset "Unitful" begin
+    # 
+    ∆t = 0.001 * u"s"
+    I = diagm([1.0, 1.0, 1.0]) * u"kg * m^2"
+    torque(q) = [0.1, 0.0, 0.0] * u"N * m"
+    q0 = Quaternion(1.0, 0.0, 0.0, 0.0)
+    w0 = [0.0, 0.0, 1.0] * u"1/s"
+    
+    q1, w1 = integrate(q0, w0, I, ∆t, torque)
+
+    @test unit(q1) == NoUnits
+    @test unit(w1) == unit(u"1/s")
 end

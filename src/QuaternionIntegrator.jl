@@ -7,11 +7,14 @@ using Unitful
 export rotate, orientation, integrate
 
 import Unitful.unit
+import Quaternions.imag
 
 
 # Some utility functions to help make this package compatible with Unitful
 unit(A::Array) = unit(eltype(A))
 @inline vec_quaternion(v::Vector) =  Quaternion(0.0, ustrip.(unit(v), v)) * unit(v)
+imag(q::Quantity) = imag(ustrip(unit(q), q)) * unit(q)
+
 
 
 """
@@ -41,20 +44,29 @@ end
 
 
 """
-    integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Function)
+    integrate(q0::Quaternion, ω0::Vector, Ib::Matrix, ∆t, torque::Function)
 
 Integrate a rotational state ahead by one time step.
 
 - `q0`, current orientation quaternion.
-- `w0`, current angular velocity.
-- `Ib`, inertial tensor of the object in body coordinates.
-- `dt`, length of time step.
-- `torque`, a function that returns a torque vector given an orientation. 
+- `ω0`, current angular velocity (length-3 vector).
+- `Ib`, inertial tensor of the object in body coordinates (3×3 matrix).
+- `∆t`, length of time step.
+- `torque`, a function that returns a (length-3) torque vector given an orientation. 
 
-Returns `(q1, w1)`, the orientation and angular velocity at the end of the time step.
+Returns `(q1, ω1)`, the orientation and angular velocity at the end of the time step.
+
+Using the Unitful package, all inputs can have units, all the mathematics are done with
+units and the return values will have correct units.
+
+- `q0` is dimensionless.
+- `ω0` has dimension of 1/time (SI: 1/second)
+- `Ib` has dimension mass * length^2 (SI: kilogram * meter^2)
+- `∆t` has dimension of time (SI: second)
+- `torque` returns a value with dimension of torque (SI: Newton * meter)
 
 """
-function integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Function)
+function integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt, torque::Function)
     
     # Transform velocity and torque into body frame
     wb0 = rotate(inv(q0), w0)
@@ -99,14 +111,14 @@ end
 
 
 """
-    integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Function, N::Integer)
+    integrate(q0::Quaternion, ω0::Vector, Ib::Matrix, ∆t, torque::Function, N::Integer)
 
 Integrate a rotational state ahead by `N` time steps.
 
-Returns `(q1, w1)`, the orientation and angular velocity after `N` integration steps.
+Returns `(q1, ω1)`, the orientation and angular velocity after `N` integration steps.
 
 """
-function integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt::Real, torque::Function, Nsteps::Integer)
+function integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt, torque::Function, Nsteps::Integer)
     for i = 1:Nsteps
         q0, w0 = integrate(q0, w0, Ib, dt, torque)
     end
