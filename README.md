@@ -1,6 +1,9 @@
 
 # QuaternionIntegrator.jl
 
+[![Build Status](https://travis-ci.org/dronir/QuaternionIntegrator.jl.svg?branch=master)](https://travis-ci.org/dronir/QuaternionIntegrator.jl)
+[![codecov](https://codecov.io/gh/dronir/QuaternionIntegrator.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/dronir/QuaternionIntegrator.jl)
+
 Simple integrator for orientation quaternions. Given an orientation quaternion, initial
 angular velocity, an inertial tensor and a function that gives torque as a function of
 orientation, this package allows you to compute the time evolution of the orientation.
