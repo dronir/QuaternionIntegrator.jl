@@ -42,6 +42,6 @@ q0 = Quaternion(1.0, 0.0, 0.0, 0.0)
 # Get orientation and angular velocity after one timestep
 q1, ω1 = integrate(q0, ω0, I, ∆t, torque)
 
-# Compute 1000 time steps ahead and get arrays of orientations and velocities
-Q, Ω = integrate(q0, ω0, I, ∆t, torque, 1000)
+# Compute 1000 time steps ahead
+qn, ωn = integrate(q0, ω0, I, ∆t, torque, 1000)
 ```
