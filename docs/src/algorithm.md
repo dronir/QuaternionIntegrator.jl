@@ -105,9 +105,9 @@ a "prediction" for the half-point orientation quaternion.
 ```
 
 ```math 
-q_\frac{1}{2} = \left( \cos \left(\frac{1}{4} \left| \omega_\frac{1}{4} \right|
-\Delta t \right), \sin \left( \frac{1}{4} \left| \omega_\frac{1}{4} \right| \Delta t
-\right) \hat \omega_\frac{1}{4} \right) q_0
+q_\frac{1}{2} = \left( \cos \left( \left| \omega_\frac{1}{4} \right| \frac{\Delta t}{4}
+\right), \sin \left( \left| \omega_\frac{1}{4} \right| \frac{\Delta t}{4} \right) \hat
+\omega_\frac{1}{4} \right) q_0
 ```
 
 !!! note
@@ -137,9 +137,9 @@ endpoint orientation
 ```
 
 ```math 
-q_1 = \left( \cos \left(\frac{1}{2} \left| \omega_\frac{1}{2} \right|
-\Delta t \right), \sin \left( \frac{1}{2} \left| \omega_\frac{1}{2} \right| \Delta t
-\right) \hat \omega_\frac{1}{2} \right) q_0
+q_1 = \left( \cos \left( \left| \omega_\frac{1}{2} \right| \frac{\Delta t}{2} \right), \sin
+\left( \left| \omega_\frac{1}{2} \right| \frac{\Delta t}{2} \right) \hat \omega_\frac{1}{2}
+\right) q_0
 ```
 
 
