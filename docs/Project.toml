@@ -1,6 +1,7 @@
 [deps]
 BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+Quaternions = "94ee1d12-ae83-5a48-8b1c-48b8ff168ae0"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [compat]

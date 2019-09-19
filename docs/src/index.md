@@ -50,7 +50,7 @@ qn, ωn = integrate(q0, ω0, I, ∆t, torque, 1000)
 ## Now supporting Unitful.jl!
 
 If [Unitful.jl](https://github.com/PainterQubits/Unitful.jl) units are provided for the
-inputs, the output will have correct units.
+inputs, the output will have correct units. This has a minor effect on performance.
 
 
 ```@example
@@ -63,36 +63,6 @@ q0 = Quaternion(1.0, 0.0, 0.0, 0.0)
 q1, ω1 = integrate(q0, ω0, I, ∆t, torque, 1000)
 ```
 
-This will have a small effect on performance. Without units:
-
-```@example
-using BenchmarkTools
-using Quaternions, QuaternionIntegrator, LinearAlgebra # hide
-∆t = 0.01 # hide
-I = diagm([1.0, 1.0, 1.0]) # hide
-torque(q) = [0.0, 1.0, 0.0] # hide
-q0 = Quaternion(1.0, 0.0, 0.0, 0.0) # hide
-ω0 = [0.0, 0.0, 0.0] # hide
-q1, ω1 = integrate(q0, ω0, I, ∆t, torque, 1000) # hide
-
-@benchmark integrate(q0, ω0, I, ∆t, torque, 1000)
-```
-
-With units:
-
-```@example
-using BenchmarkTools # hide
-using Quaternions, QuaternionIntegrator, Unitful, LinearAlgebra # hide
-∆t = 10000.0 * u"µs" # hide
-I = diagm([1.0, 1.0, 1.0]) * u"kg * m^2" # hide
-torque(q) = [0.0, 1000.0, 0.0] * u"N * mm" # hide
-q0 = Quaternion(1.0, 0.0, 0.0, 0.0) # hide
-ω0 = [0.0, 0.0, 0.0] * u"1/s" # hide
-q1, ω1 = integrate(q0, ω0, I, ∆t, torque, 1000) # hide
-
-@benchmark integrate(q0, ω0, I, ∆t, torque, 1000)
-
-```
 
 
 
