@@ -17,8 +17,7 @@ accuracy of the algorithm.
 ## Quick start
 
 ```
-using Quaternions
-using QuaternionIntegrator
+using QuaternionIntegrator, Quaternions, LinearAlgebra
 
 # Constant torque around y axis
 torque(q) = [0.0, 1.0, 0.0]
