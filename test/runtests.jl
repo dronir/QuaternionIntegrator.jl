@@ -4,6 +4,7 @@ using Quaternions
 using QuaternionIntegrator
 using LinearAlgebra
 using Unitful
+using StaticArrays
 
 @testset "Rotation function" begin
     axis = [0.0, 0.0, 1.0]
@@ -70,4 +71,19 @@ end
 
     @test unit(q1) == NoUnits
     @test unit(w1) == unit(u"1/s")
+end
+
+@testset "Static Arrays" begin
+    # Set up test
+    
+    ∆t = 0.001
+    I = diagm([1.0, 1.0, 1.0])
+    I = SMatrix{3,3}(I)
+    torque(q) = SVector(0.1, 0.0, 0.0)
+    q0 = Quaternion(1.0, 0.0, 0.0, 0.0)
+    w0 = SVector(0.0, 0.0, 1.0)
+    
+    q1, w1 = integrate(q0, w0, I, ∆t, torque)
+    @test typeof(w1) <: SArray
+    
 end

@@ -46,12 +46,10 @@ q1, ω1 = integrate(q0, ω0, I, ∆t, torque)
 qn, ωn = integrate(q0, ω0, I, ∆t, torque, 1000)
 ```
 
-
-## Now supporting Unitful.jl!
+## Now supporting Unitful.jl
 
 If [Unitful.jl](https://github.com/PainterQubits/Unitful.jl) units are provided for the
 inputs, the output will have correct units. This has a minor effect on performance.
-
 
 ```@example
 using Quaternions, QuaternionIntegrator, Unitful, LinearAlgebra
@@ -63,7 +61,9 @@ q0 = Quaternion(1.0, 0.0, 0.0, 0.0)
 q1, ω1 = integrate(q0, ω0, I, ∆t, torque, 1000)
 ```
 
+## Now also supporting StaticArrays.jl
 
-
-
-
+Now you can also give your torque function output, your angular velocity vector, and
+your inertial tensor as [StaticArrays](https://github.com/JuliaArrays/StaticArrays.jl).
+This will result in a considerable speedup of the code. In my testing, a simulation that
+took 5–6 minutes with Julia arrays, only took 30 seconds with static arrays.

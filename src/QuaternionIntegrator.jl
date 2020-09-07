@@ -3,22 +3,26 @@ module QuaternionIntegrator
 using Quaternions
 using LinearAlgebra
 using Unitful
+using StaticArrays
 
 export rotate, orientation, integrate
 
 import Unitful.unit
-import Quaternions.imag
+import Quaternions: imag, Quaternion
 
 
 # Some utility functions to help make this package compatible with Unitful
-unit(A::Array) = unit(eltype(A))
-@inline vec_quaternion(v::Vector) =  Quaternion(0.0, ustrip.(unit(v), v)) * unit(v)
+unit(A) = unit(eltype(A))
+@inline vec_quaternion(v) =  Quaternion(0.0, ustrip.(unit(v), v)) * unit(v)
 imag(q::Quantity) = imag(ustrip(unit(q), q)) * unit(q)
 
+# Quaternions from SVectors
+Quaternion(s::Real, w::SArray{Tuple{3},T,1,3}) where T = Quaternion(s, w...)
+Quaternion(w::SArray{Tuple{4},T,1,4}) where T = Quaternion(w...)
 
 
 """
-    rotate(q::Quaternion, v::Vector)
+    rotate(q::Quaternion, v)
 
 Apply orientation quaternion `q` to rotate vector `v`, return rotated vector.
 
@@ -26,7 +30,12 @@ An object's orientation quaternion rotates vectors from the body-fixed coordinat
 coordinates. For the opposite rotation, call `rotate(inv(q), v)`.
 
 """
-rotate(q::Quaternion, v::Vector) = Quaternions.imag(q * vec_quaternion(v) * inv(q))
+rotate(q::Quaternion, v) = Quaternions.imag(q * vec_quaternion(v) * inv(q))
+
+function rotate(q::Quaternion, v::SVector) 
+    p = q * vec_quaternion(v) * inv(q)
+    return SVector{3}(imag(p))
+end
 
 
 
@@ -38,7 +47,7 @@ Return an orientation quaternion with the given axis `v` and rotation angle.
 The vector `v` is assumed to be normalized to unit length.
 
 """
-function orientation(v::Vector, angle::Real)
+function orientation(v, angle::Real)
     return Quaternion(cos(0.5 * angle), sin(0.5 * angle) .* v)
 end
 
@@ -66,7 +75,7 @@ units and the return values will have correct units.
 - `torque` returns a value with dimension of torque (SI: Newton * meter)
 
 """
-function integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt, torque::Function)
+function integrate(q0::Quaternion, w0, Ib, dt, torque::Function)
     
     # Transform velocity and torque into body frame
     wb0 = rotate(inv(q0), w0)
@@ -118,7 +127,7 @@ Integrate a rotational state ahead by `N` time steps.
 Returns `(q1, ω1)`, the orientation and angular velocity after `N` integration steps.
 
 """
-function integrate(q0::Quaternion, w0::Vector, Ib::Matrix, dt, torque::Function, Nsteps::Integer)
+function integrate(q0::Quaternion, w0, Ib, dt, torque::Function, Nsteps::Integer)
     for i = 1:Nsteps
         q0, w0 = integrate(q0, w0, Ib, dt, torque)
     end
