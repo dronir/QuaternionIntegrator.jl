@@ -16,8 +16,10 @@ unit(A) = unit(eltype(A))
 @inline vec_quaternion(v) =  Quaternion(0.0, ustrip.(unit(v), v)) * unit(v)
 imag(q::Quantity) = imag(ustrip(unit(q), q)) * unit(q)
 
-# Quaternions from SVectors
+# Quaternion from length-3 SVectors
 Quaternion(s::Real, w::SArray{Tuple{3},T,1,3}) where T = Quaternion(s, w...)
+
+# Quaternion from length-4 SVectors
 Quaternion(w::SArray{Tuple{4},T,1,4}) where T = Quaternion(w...)
 
 
