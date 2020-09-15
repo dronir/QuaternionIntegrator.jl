@@ -26,20 +26,6 @@ end
 end
 
 
-@testset "Step" begin
-    # Set up test
-    
-    ∆t = 0.001
-    I = diagm([1.0, 1.0, 1.0])
-    torque(q) = [0.1, 0.0, 0.0]
-    q0 = Quaternion(1.0, 0.0, 0.0, 0.0)
-    w0 = [0.0, 0.0, 1.0]
-    
-    q1, w1 = integrate(q0, w0, I, ∆t, torque)
-    
-end
-
-
 @testset "Multi-step" begin
 
     # Set up tests
@@ -80,7 +66,7 @@ end
     I = diagm([1.0, 1.0, 1.0])
     I = SMatrix{3,3}(I)
     torque(q) = SVector(0.1, 0.0, 0.0)
-    q0 = Quaternion(1.0, 0.0, 0.0, 0.0)
+    q0 = Quaternion(1.0, SVector(0.0, 0.0, 0.0))
     w0 = SVector(0.0, 0.0, 1.0)
     
     q1, w1 = integrate(q0, w0, I, ∆t, torque)
