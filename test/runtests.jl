@@ -66,6 +66,7 @@ end
     I = diagm([1.0, 1.0, 1.0])
     I = SMatrix{3,3}(I)
     torque(q) = SVector(0.1, 0.0, 0.0)
+    q0 = Quaternion(SVector(1.0, 0.0, 0.0, 0.0))
     q0 = Quaternion(1.0, SVector(0.0, 0.0, 0.0))
     w0 = SVector(0.0, 0.0, 1.0)
     
