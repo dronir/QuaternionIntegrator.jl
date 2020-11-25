@@ -55,7 +55,7 @@ end
 
 
 """
-    integrate(q0::Quaternion, ω0::Vector, Ib::Matrix, ∆t, torque::Function)
+    integrate(q0::Quaternion, ω0::Vector, Ib::Matrix, ∆t, torque::Function ; IbInv::Union{Nothing,AbstractArray} = nothing)
 
 Integrate a rotational state ahead by one time step.
 
@@ -64,6 +64,7 @@ Integrate a rotational state ahead by one time step.
 - `Ib`, inertial tensor of the object in body coordinates (3×3 matrix).
 - `∆t`, length of time step.
 - `torque`, a function that returns a (length-3) torque vector given an orientation. 
+- `IbInv` is an optional parameter giving the inverse matrix of `Ib`. Providing it will speed up the computation slightly.
 
 Returns `(q1, ω1)`, the orientation and angular velocity at the end of the time step.
 
@@ -77,14 +78,17 @@ units and the return values will have correct units.
 - `torque` returns a value with dimension of torque (SI: Newton * meter)
 
 """
-function integrate(q0::Quaternion, w0, Ib, dt, torque::Function)
+function integrate(q0::Quaternion, w0, Ib, dt, torque::Function ; IbInv::Union{Nothing,AbstractArray} = nothing)
+    if IbInv === nothing
+        IbInv = inv(Ib)
+    end
     
     # Transform velocity and torque into body frame
     wb0 = rotate(inv(q0), w0)
     Tb0 = rotate(inv(q0), torque(q0))
     
     # Compute body-frame startpoint acceleration from torque
-    wdb0 = inv(Ib) * (Tb0 - cross(wb0, (Ib * wb0)))
+    wdb0 = IbInv * (Tb0 - cross(wb0, (Ib * wb0)))
     
     # Compute quarter-point body-frame velocity from startpoint velocity and acceleration
     wb4 = wb0 + 0.25 * wdb0 * dt
@@ -103,7 +107,7 @@ function integrate(q0::Quaternion, w0, Ib, dt, torque::Function)
     Tb2 = rotate(inv(qp2), torque(qp2))
     
     # Compute body-frame midpoint acceleration from torque based on midpoint orientation
-    wdb2 = inv(Ib) * (Tb2 - cross(wb2, (Ib * wb2)))
+    wdb2 = IbInv * (Tb2 - cross(wb2, (Ib * wb2)))
 
     # Rotate (predicted) midpoint velocity to world frame
     w2 = rotate(qp2, wb2)
@@ -130,8 +134,9 @@ Returns `(q1, ω1)`, the orientation and angular velocity after `N` integration 
 
 """
 function integrate(q0::Quaternion, w0, Ib, dt, torque::Function, Nsteps::Integer)
+    IbInv = inv(Ib)
     for i = 1:Nsteps
-        q0, w0 = integrate(q0, w0, Ib, dt, torque)
+        q0, w0 = integrate(q0, w0, Ib, dt, torque ; IbInv = IbInv)
     end
     return q0, w0
 end
